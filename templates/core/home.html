@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% block title %}{% if site_settings %}{{ site_settings.company_name }} - Precision Brass Components Manufacturer{% else %}Suraj Brass Industries{% endif %}{% endblock %}
+
+{% block content %}
+
+<!-- HERO CAROUSEL -->
+{% if banners %}
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        {% for banner in banners %}
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+        {% endfor %}
+    </div>
+    <div class="carousel-inner">
+        {% for banner in banners %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img src="{{ banner.image.url }}" class="d-block w-100" alt="{{ banner.title }}" style="height:520px;object-fit:cover;">
+            <div class="carousel-caption d-flex flex-column align-items-start justify-content-center h-100" style="text-align:left; padding-left:8%;">
+                <div style="background:rgba(0,0,0,.45); padding:30px 36px; border-radius:8px; border-left:4px solid var(--brass-light); max-width:560px;">
+                    <h1 class="fw-bold display-5">{{ banner.title }}</h1>
+                    {% if banner.subtitle %}<p class="lead mb-2">{{ banner.subtitle }}</p>{% endif %}
+                    {% if banner.description %}<p class="small mb-3 d-none d-md-block">{{ banner.description }}</p>{% endif %}
+                    {% if banner.button_text %}
+                    <a href="{{ banner.button_url }}" class="btn btn-brass btn-lg px-4">{{ banner.button_text }} <i class="fas fa-arrow-right ms-2"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+</div>
+{% else %}
+<div class="py-5 text-center" style="background:linear-gradient(135deg,#1a1a2e,#2d2d4e); color:#fff; min-height:420px; display:flex; align-items:center;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Precision Brass Components</h1>
+        <p class="lead mb-4">Trusted manufacturer of high-quality brass fittings, inserts, and industrial components</p>
+        <a href="{% url 'product_list' %}" class="btn btn-brass btn-lg me-3">Explore Products</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">Get a Quote</a>
+    </div>
+</div>
+{% endif %}
+
+<!-- STATS BAR -->
+{% if site_settings %}
+<div style="background:var(--brass); color:#fff; padding:20px 0;">
+    <div class="container">
+        <div class="row text-center g-2">
+            <div class="col-6 col-md-3">
+                <div class="fw-bold fs-4">{{ site_settings.products_count }}</div>
+                <small>Products</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fw-bold fs-4">{{ site_settings.clients_count }}</div>
+                <small>Happy Clients</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fw-bold fs-4">{{ site_settings.countries_count }}</div>
+                <small>Countries Served</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fw-bold fs-4">{{ site_settings.experience_years }}</div>
+                <small>Years Experience</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ABOUT SNIPPET -->
+{% if site_settings and site_settings.about_short %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="text-muted text-uppercase fw-semibold small letter-spacing">About Us</span>
+                <h2 class="section-title mt-1 mb-3">Quality Brass Manufacturing Since {{ site_settings.established_year|default:"2000" }}</h2>
+                <div class="divider mb-4" style="margin:0 0 16px 0;"></div>
+                <p class="text-muted">{{ site_settings.about_short }}</p>
+                <a href="{% url 'about' %}" class="btn btn-brass mt-2">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    {% for item in why_us|slice:":4" %}
+                    <div class="col-6">
+                        <div class="card p-3 h-100 text-center">
+                            <i class="fas {{ item.icon }} fa-2x mb-2" style="color:var(--brass)"></i>
+                            <h6 class="fw-bold mb-1">{{ item.title }}</h6>
+                            <p class="small text-muted mb-0">{{ item.description|truncatechars:80 }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- PRODUCT CATEGORIES -->
+{% if categories %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-muted text-uppercase fw-semibold small">Our Range</span>
+            <h2 class="section-title mt-1">Product Categories</h2>
+            <div class="divider mx-auto mt-2 mb-3"></div>
+            <p class="section-subtitle mx-auto text-muted">Explore our comprehensive range of precision brass components manufactured to international standards.</p>
+        </div>
+        <div class="row g-4">
+            {% for cat in categories %}
+            <div class="col-lg-4 col-md-6">
+                <a href="{% url 'category_detail' cat.slug %}" class="text-decoration-none">
+                    <div class="card overflow-hidden h-100">
+                        {% if cat.image %}
+                        <img src="{{ cat.image.url }}" class="card-img-top" alt="{{ cat.name }}" style="height:200px;object-fit:cover;">
+                        {% else %}
+                        <div style="height:200px;background:linear-gradient(135deg,#f5e6c8,#e8d5a3);display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-cog fa-4x" style="color:var(--brass);opacity:.4;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold" style="color:var(--dark)">{{ cat.name }}</h5>
+                            {% if cat.description %}<p class="card-text small text-muted">{{ cat.description|truncatechars:100 }}</p>{% endif %}
+                            <span class="btn btn-outline-brass btn-sm mt-2">View Products <i class="fas fa-arrow-right ms-1"></i></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'product_list' %}" class="btn btn-brass px-5">View All Products</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- FEATURED PRODUCTS -->
+{% if featured_products %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-muted text-uppercase fw-semibold small">Highlights</span>
+            <h2 class="section-title mt-1">Featured Products</h2>
+            <div class="divider mx-auto mt-2"></div>
+        </div>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100">
+                    {% with product.get_primary_image as img %}
+                    {% if img %}
+                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height:180px;object-fit:cover;">
+                    {% else %}
+                    <div style="height:180px;background:#f0e6c8;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-cube fa-3x" style="color:var(--brass);opacity:.4;"></i>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title fw-bold">{{ product.name }}</h6>
+                        <p class="small text-muted flex-grow-1">{{ product.short_description|truncatechars:80 }}</p>
+                        {% if product.material %}<span class="badge badge-brass small mb-2">{{ product.material }}</span>{% endif %}
+                        <a href="{% url 'product_detail' product.slug %}" class="btn btn-brass btn-sm mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- WHY CHOOSE US (full) -->
+{% if why_us %}
+<section class="py-5" style="background:var(--dark); color:#fff;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title" style="color:#fff;">Why Choose Us?</h2>
+            <div class="divider mx-auto mt-2" style="background:var(--brass-light);"></div>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for item in why_us %}
+            <div class="col-lg-3 col-md-6">
+                <div class="text-center p-4" style="background:rgba(255,255,255,.05); border-radius:8px; border-top:3px solid var(--brass);">
+                    <i class="fas {{ item.icon }} fa-3x mb-3" style="color:var(--brass-light);"></i>
+                    <h5 class="fw-bold mb-2">{{ item.title }}</h5>
+                    <p class="small" style="color:#bbb;">{{ item.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- TESTIMONIALS -->
+{% if testimonials %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="divider mx-auto mt-2"></div>
+        </div>
+        <div class="row g-4">
+            {% for t in testimonials %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card p-4 h-100">
+                    <div class="mb-2">
+                        {% for i in "12345" %}
+                        <i class="fas fa-star {% if forloop.counter <= t.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="text-muted fst-italic flex-grow-1">"{{ t.message }}"</p>
+                    <div class="d-flex align-items-center mt-3 pt-3 border-top">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" class="rounded-circle me-3" style="width:45px;height:45px;object-fit:cover;">
+                        {% else %}
+                        <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" style="width:45px;height:45px;background:var(--brass);color:#fff;font-weight:700;">{{ t.client_name|first }}</div>
+                        {% endif %}
+                        <div>
+                            <div class="fw-bold small">{{ t.client_name }}</div>
+                            <div class="text-muted" style="font-size:.8rem;">{{ t.company }}{% if t.country %}, {{ t.country }}{% endif %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- LATEST NEWS -->
+{% if latest_posts %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-muted text-uppercase fw-semibold small">Updates</span>
+            <h2 class="section-title mt-1">Latest News</h2>
+            <div class="divider mx-auto mt-2"></div>
+        </div>
+        <div class="row g-4">
+            {% for post in latest_posts %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height:200px;object-fit:cover;">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-muted small mb-2"><i class="fas fa-calendar me-1"></i>{{ post.published_at|date:"d M Y" }}</div>
+                        <h5 class="card-title fw-bold">{{ post.title }}</h5>
+                        <p class="text-muted small flex-grow-1">{{ post.excerpt|truncatechars:120 }}</p>
+                        <a href="{% url 'post_detail' post.slug %}" class="btn btn-outline-brass btn-sm mt-2">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'blog_list' %}" class="btn btn-brass px-5">View All News</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA BANNER -->
+<section style="background:var(--brass); padding:50px 0; color:#fff;">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Ready to Place Your Order?</h2>
+        <p class="mb-4 opacity-75">Contact us today for custom brass components, bulk pricing, and technical support.</p>
+        <a href="{% url 'contact' %}" class="btn btn-light btn-lg px-5 me-3" style="color:var(--brass-dark); font-weight:700;">Get a Quote</a>
+        {% if site_settings and site_settings.phone_primary %}
+        <a href="tel:{{ site_settings.phone_primary }}" class="btn btn-outline-light btn-lg px-5"><i class="fas fa-phone-alt me-2"></i>Call Us Now</a>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

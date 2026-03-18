@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - {% if site_settings %}{{ site_settings.company_name }}{% endif %}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="mb-2">{{ product.name }}</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'category_detail' product.category.slug %}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol></nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Images -->
+            <div class="col-lg-5">
+                {% with images|first as primary %}
+                {% if primary %}
+                <div class="mb-3">
+                    <img src="{{ primary.image.url }}" id="mainImg" class="img-fluid rounded shadow" alt="{{ product.name }}" style="width:100%;max-height:400px;object-fit:cover;">
+                </div>
+                {% if images|length > 1 %}
+                <div class="d-flex gap-2 flex-wrap">
+                    {% for img in images %}
+                    <img src="{{ img.image.url }}" onclick="document.getElementById('mainImg').src=this.src"
+                         class="rounded border" style="width:70px;height:70px;object-fit:cover;cursor:pointer;">
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="rounded shadow d-flex align-items-center justify-content-center" style="height:350px;background:#f5e6c8;">
+                    <i class="fas fa-cube fa-6x" style="color:var(--brass);opacity:.3;"></i>
+                </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Details -->
+            <div class="col-lg-7">
+                <span class="badge badge-brass mb-2">{{ product.category.name }}</span>
+                {% if product.is_customizable %}<span class="badge bg-success ms-1 mb-2">Customizable</span>{% endif %}
+                <h2 class="fw-bold mb-3">{{ product.name }}</h2>
+                {% if product.short_description %}<p class="text-muted">{{ product.short_description }}</p>{% endif %}
+
+                <table class="table table-sm table-bordered mb-4">
+                    {% if product.material %}<tr><th class="w-35 bg-light">Material</th><td>{{ product.material }}</td></tr>{% endif %}
+                    {% if product.finish %}<tr><th class="bg-light">Finish</th><td>{{ product.finish }}</td></tr>{% endif %}
+                    {% if product.size_range %}<tr><th class="bg-light">Size Range</th><td>{{ product.size_range }}</td></tr>{% endif %}
+                    {% if product.moq %}<tr><th class="bg-light">Min. Order</th><td>{{ product.moq }}</td></tr>{% endif %}
+                    {% if product.price %}<tr><th class="bg-light">Price</th><td class="fw-bold" style="color:var(--brass)">₹{{ product.price }} / {{ product.price_unit }}</td></tr>{% endif %}
+                </table>
+
+                <div class="d-flex gap-2 flex-wrap mb-4">
+                    <button class="btn btn-brass px-4" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                        <i class="fas fa-envelope me-2"></i>Send Inquiry
+                    </button>
+                    {% if site_settings and site_settings.whatsapp_number %}
+                    <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hi, I'm interested in {{ product.name }}" target="_blank" class="btn btn-success px-4">
+                        <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Description & Specs -->
+        {% if product.description or product.specifications %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="productTabs">
+                    {% if product.description %}<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#desc">Description</a></li>{% endif %}
+                    {% if product.specifications %}<li class="nav-item"><a class="nav-link {% if not product.description %}active{% endif %}" data-bs-toggle="tab" href="#specs">Specifications</a></li>{% endif %}
+                </ul>
+                <div class="tab-content border border-top-0 p-4 rounded-bottom">
+                    {% if product.description %}
+                    <div class="tab-pane fade show active" id="desc">{{ product.description|linebreaks }}</div>
+                    {% endif %}
+                    {% if product.specifications %}
+                    <div class="tab-pane fade {% if not product.description %}show active{% endif %}" id="specs">
+                        <pre class="mb-0" style="white-space:pre-wrap;font-family:inherit;">{{ product.specifications }}</pre>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Related Products -->
+        {% if related_products %}
+        <div class="mt-5">
+            <h3 class="fw-bold mb-4">Related Products</h3>
+            <div class="row g-4">
+                {% for rp in related_products %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card h-100">
+                        {% with rp.get_primary_image as img %}
+                        {% if img %}<img src="{{ img.image.url }}" class="card-img-top" style="height:160px;object-fit:cover;" alt="{{ rp.name }}">{% endif %}
+                        {% endwith %}
+                        <div class="card-body">
+                            <h6 class="fw-bold">{{ rp.name }}</h6>
+                            <a href="{% url 'product_detail' rp.slug %}" class="btn btn-outline-brass btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Inquiry Modal -->
+<div class="modal fade" id="inquiryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--dark);color:#fff;">
+                <h5 class="modal-title">Product Inquiry — {{ product.name }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3"><label class="form-label fw-semibold">Your Name *</label><input type="text" name="name" class="form-control" required></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Email *</label><input type="email" name="email" class="form-control" required></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Phone</label><input type="tel" name="phone" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Required Quantity</label><input type="text" name="quantity" class="form-control" placeholder="e.g. 500 pieces"></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Message</label><textarea name="message" class="form-control" rows="3" placeholder="Any specific requirements..."></textarea></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-brass">Submit Inquiry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

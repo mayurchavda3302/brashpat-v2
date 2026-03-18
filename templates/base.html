@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% if site_settings %}{{ site_settings.company_name }}{% else %}Suraj Brass Industries{% endif %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}{% if site_settings %}{{ site_settings.meta_description }}{% endif %}{% endblock %}">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brass: #B8860B;
+            --brass-light: #DAA520;
+            --brass-dark: #8B6914;
+            --dark: #1a1a2e;
+            --text-muted: #6c757d;
+        }
+        body { font-family: 'Roboto', sans-serif; color: #333; }
+        a { text-decoration: none; }
+
+        /* ---- TOP BAR ---- */
+        .topbar {
+            background: var(--dark);
+            color: #ccc;
+            font-size: 13px;
+            padding: 6px 0;
+        }
+        .topbar a { color: #ccc; }
+        .topbar a:hover { color: var(--brass-light); }
+
+        /* ---- NAVBAR ---- */
+        .navbar { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+        .navbar-brand img { height: 55px; }
+        .navbar-brand span { font-size: 1.3rem; font-weight: 700; color: var(--brass-dark); line-height: 1.2; }
+        .navbar-brand small { display: block; font-size: .7rem; color: #666; font-weight: 400; }
+        .nav-link { font-weight: 500; color: #333 !important; padding: 8px 14px !important; }
+        .nav-link:hover, .nav-link.active { color: var(--brass) !important; }
+        .dropdown-menu { border: none; box-shadow: 0 5px 20px rgba(0,0,0,.1); border-top: 3px solid var(--brass); }
+        .dropdown-item:hover { background: #fff8e1; color: var(--brass-dark); }
+        .btn-inquiry {
+            background: var(--brass);
+            color: #fff !important;
+            border-radius: 4px;
+            padding: 8px 18px !important;
+            transition: background .2s;
+        }
+        .btn-inquiry:hover { background: var(--brass-dark); }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--dark) 0%, #2d2d4e 100%);
+            color: #fff;
+            padding: 60px 0 40px;
+        }
+        .page-header h1 { font-family: 'Playfair Display', serif; }
+        .breadcrumb-item + .breadcrumb-item::before { color: #aaa; }
+        .breadcrumb-item a { color: var(--brass-light); }
+        .breadcrumb-item.active { color: #ccc; }
+        footer { background: var(--dark); color: #ccc; padding-top: 60px; }
+        footer h5 { color: var(--brass-light); font-weight: 700; margin-bottom: 20px; text-transform: uppercase; font-size: .85rem; letter-spacing: 1px; }
+        footer a { color: #bbb; font-size: .9rem; }
+        footer a:hover { color: var(--brass-light); }
+        footer ul li { margin-bottom: 8px; }
+        .footer-bottom { background: rgba(0,0,0,.3); padding: 16px 0; margin-top: 40px; font-size: .85rem; }
+        .social-icons a {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,.1); color: #ccc;
+            margin-right: 6px; transition: all .2s;
+        }
+        .social-icons a:hover { background: var(--brass); color: #fff; }
+
+        /* ---- UTILITIES ---- */
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; }
+        .section-subtitle { color: var(--text-muted); max-width: 600px; }
+        .divider { width: 60px; height: 3px; background: var(--brass); margin: 12px auto 0; }
+        .btn-brass { background: var(--brass); color: #fff; border: none; }
+        .btn-brass:hover { background: var(--brass-dark); color: #fff; }
+        .btn-outline-brass { border: 2px solid var(--brass); color: var(--brass); background: transparent; }
+        .btn-outline-brass:hover { background: var(--brass); color: #fff; }
+        .card { border: none; box-shadow: 0 2px 15px rgba(0,0,0,.07); transition: transform .2s, box-shadow .2s; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,.12); }
+        .badge-brass { background: var(--brass); color: #fff; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar d-none d-md-block">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                {% if site_settings and site_settings.phone_primary %}
+                <a href="tel:{{ site_settings.phone_primary }}"><i class="fas fa-phone-alt me-1"></i>{{ site_settings.phone_primary }}</a>
+                {% if site_settings.phone_secondary %}
+                &nbsp;|&nbsp;
+                <a href="tel:{{ site_settings.phone_secondary }}">{{ site_settings.phone_secondary }}</a>
+                {% endif %}
+                {% endif %}
+                {% if site_settings and site_settings.email %}
+                &nbsp;|&nbsp;
+                <a href="mailto:{{ site_settings.email }}"><i class="fas fa-envelope me-1"></i>{{ site_settings.email }}</a>
+                {% endif %}
+            </div>
+            <div class="social-icons" style="display:flex; gap:4px;">
+                {% if site_settings %}
+                {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                {% if site_settings.twitter_url %}<a href="{{ site_settings.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+            {% if site_settings and site_settings.logo %}
+            <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.company_name }}">
+            {% else %}
+            <span>
+                {% if site_settings %}{{ site_settings.company_name }}{% else %}Suraj Brass Industries{% endif %}
+                <small>Precision Brass Components</small>
+            </span>
+            {% endif %}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About Us</a></li>
+
+                <!-- Products Mega Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'product' in request.resolver_match.url_name %}active{% endif %}" href="#" data-bs-toggle="dropdown">Products</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}"><i class="fas fa-th me-2 text-muted"></i>All Products</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% for cat in nav_categories %}
+                        <li>
+                            <a class="dropdown-item fw-500" href="{% url 'category_detail' cat.slug %}">
+                                <i class="fas fa-angle-right me-2 text-muted"></i>{{ cat.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'quality' %}active{% endif %}" href="{% url 'quality' %}">Quality</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'blog' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'blog_list' %}">News</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a></li>
+                <li class="nav-item ms-2">
+                    <a class="nav-link btn-inquiry" href="{% url 'contact' %}">Get a Quote</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- MESSAGES -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- MAIN CONTENT -->
+{% block content %}{% endblock %}
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <h5>{% if site_settings %}{{ site_settings.company_name }}{% else %}Suraj Brass Industries{% endif %}</h5>
+                <p class="text-muted small">{% if site_settings %}{{ site_settings.about_short }}{% else %}Leading manufacturer of precision brass components, fittings, and parts for global markets.{% endif %}</p>
+                <div class="social-icons mt-3">
+                    {% if site_settings %}
+                    {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                    {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                    {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                    {% if site_settings.twitter_url %}<a href="{{ site_settings.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                    {% if site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}"><i class="fas fa-angle-right me-1"></i>Home</a></li>
+                    <li><a href="{% url 'about' %}"><i class="fas fa-angle-right me-1"></i>About Us</a></li>
+                    <li><a href="{% url 'product_list' %}"><i class="fas fa-angle-right me-1"></i>Products</a></li>
+                    <li><a href="{% url 'quality' %}"><i class="fas fa-angle-right me-1"></i>Quality</a></li>
+                    <li><a href="{% url 'blog_list' %}"><i class="fas fa-angle-right me-1"></i>Latest News</a></li>
+                    <li><a href="{% url 'contact' %}"><i class="fas fa-angle-right me-1"></i>Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Product Categories</h5>
+                <ul class="list-unstyled">
+                    {% for cat in nav_categories|slice:":6" %}
+                    <li><a href="{% url 'category_detail' cat.slug %}"><i class="fas fa-angle-right me-1"></i>{{ cat.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Contact Info</h5>
+                {% if site_settings %}
+                <ul class="list-unstyled small">
+                    {% if site_settings.address %}
+                    <li class="mb-2"><i class="fas fa-map-marker-alt me-2" style="color:var(--brass-light)"></i>{{ site_settings.address }}{% if site_settings.city %}, {{ site_settings.city }}{% endif %}{% if site_settings.state %}, {{ site_settings.state }}{% endif %}</li>
+                    {% endif %}
+                    {% if site_settings.phone_primary %}
+                    <li class="mb-2"><i class="fas fa-phone-alt me-2" style="color:var(--brass-light)"></i><a href="tel:{{ site_settings.phone_primary }}">{{ site_settings.phone_primary }}</a></li>
+                    {% endif %}
+                    {% if site_settings.email %}
+                    <li class="mb-2"><i class="fas fa-envelope me-2" style="color:var(--brass-light)"></i><a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a></li>
+                    {% endif %}
+                    {% if site_settings.whatsapp_number %}
+                    <li class="mb-2"><i class="fab fa-whatsapp me-2" style="color:var(--brass-light)"></i><a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank">WhatsApp Us</a></li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom text-center">
+        <div class="container">
+            <p class="mb-0 text-muted">
+                &copy; {% now "Y" %} {% if site_settings %}{{ site_settings.company_name }}{% else %}Suraj Brass Industries{% endif %}. All rights reserved.
+                {% if site_settings and site_settings.iso_certified %}
+                &nbsp;|&nbsp; <span class="text-warning"><i class="fas fa-certificate me-1"></i>ISO Certified</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

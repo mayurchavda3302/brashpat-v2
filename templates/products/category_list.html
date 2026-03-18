@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}All Products - {% if site_settings %}{{ site_settings.company_name }}{% endif %}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="mb-2">Our Products</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active">Products</li>
+        </ol></nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Product Categories</h2>
+            <div class="divider mx-auto mt-2 mb-3"></div>
+            <p class="text-muted section-subtitle mx-auto">Browse our complete range of precision brass components.</p>
+        </div>
+        {% if categories %}
+        <div class="row g-4">
+            {% for cat in categories %}
+            <div class="col-lg-4 col-md-6">
+                <a href="{% url 'category_detail' cat.slug %}" class="text-decoration-none">
+                    <div class="card h-100 overflow-hidden">
+                        {% if cat.image %}
+                        <img src="{{ cat.image.url }}" class="card-img-top" alt="{{ cat.name }}" style="height:220px;object-fit:cover;">
+                        {% else %}
+                        <div style="height:220px;background:linear-gradient(135deg,#f5e6c8,#e8d5a3);display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-cog fa-5x" style="color:var(--brass);opacity:.35;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="fw-bold" style="color:var(--dark)">{{ cat.name }}</h5>
+                            {% if cat.description %}<p class="text-muted small">{{ cat.description|truncatechars:120 }}</p>{% endif %}
+                            {% if cat.subcategories.exists %}
+                            <p class="small text-muted mb-2"><i class="fas fa-folder-open me-1" style="color:var(--brass)"></i>{{ cat.subcategories.count }} sub-categories</p>
+                            {% endif %}
+                            <span class="btn btn-outline-brass btn-sm">Explore <i class="fas fa-arrow-right ms-1"></i></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-boxes fa-4x mb-3" style="color:var(--brass);opacity:.4;"></i>
+            <p class="text-muted">No categories found. Please add products from the admin panel.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

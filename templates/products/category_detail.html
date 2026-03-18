@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }} - {% if site_settings %}{{ site_settings.company_name }}{% endif %}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="mb-2">{{ category.name }}</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
+            {% if category.parent %}
+            <li class="breadcrumb-item"><a href="{% url 'category_detail' category.parent.slug %}">{{ category.parent.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">{{ category.name }}</li>
+        </ol></nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        {% if category.description %}
+        <p class="lead text-muted mb-5">{{ category.description }}</p>
+        {% endif %}
+
+        <!-- Sub-categories -->
+        {% if subcategories %}
+        <h3 class="fw-bold mb-4">Sub-Categories</h3>
+        <div class="row g-4 mb-5">
+            {% for sub in subcategories %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'category_detail' sub.slug %}" class="text-decoration-none">
+                    <div class="card text-center p-4 h-100">
+                        {% if sub.image %}
+                        <img src="{{ sub.image.url }}" class="img-fluid mb-3" alt="{{ sub.name }}" style="height:100px;object-fit:contain;">
+                        {% else %}
+                        <i class="fas fa-box fa-3x mb-3" style="color:var(--brass);opacity:.5;"></i>
+                        {% endif %}
+                        <h6 class="fw-bold mb-0" style="color:var(--dark)">{{ sub.name }}</h6>
+                        {% if sub.products.count %}<small class="text-muted">{{ sub.products.count }} products</small>{% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Products (max 5) -->
+        {% if products %}
+        <h3 class="fw-bold mb-4">Products in {{ category.name }} <small class="text-muted fs-6">(Showing up to 5)</small></h3>
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100">
+                    {% with product.get_primary_image as img %}
+                    {% if img %}
+                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height:190px;object-fit:cover;">
+                    {% else %}
+                    <div style="height:190px;background:#f5e6c8;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-cube fa-3x" style="color:var(--brass);opacity:.4;"></i>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="fw-bold">{{ product.name }}</h6>
+                        {% if product.material %}<span class="badge badge-brass small mb-2">{{ product.material }}</span>{% endif %}
+                        <p class="text-muted small flex-grow-1">{{ product.short_description|truncatechars:80 }}</p>
+                        {% if product.price %}<div class="fw-bold mb-2" style="color:var(--brass)">₹{{ product.price }} / {{ product.price_unit }}</div>{% endif %}
+                        <a href="{% url 'product_detail' product.slug %}" class="btn btn-brass btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif not subcategories %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-4x mb-3" style="color:var(--brass);opacity:.3;"></i>
+            <p class="text-muted">No products found in this category yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

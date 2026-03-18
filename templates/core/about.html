@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %}About Us - {% if site_settings %}{{ site_settings.company_name }}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1 class="mb-2">About Us</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">About Us</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h2 class="section-title mb-3">Who We Are</h2>
+                <div class="divider mb-4" style="margin:0 0 20px 0;"></div>
+                {% if site_settings and site_settings.about_full %}
+                    {{ site_settings.about_full|linebreaks }}
+                {% else %}
+                <p class="text-muted">We are a leading manufacturer of precision brass components, dedicated to delivering quality products to clients across the globe.</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3 text-center">
+                    {% if site_settings %}
+                    <div class="col-6">
+                        <div class="p-4 rounded" style="background:#fff8e1; border-bottom:3px solid var(--brass);">
+                            <div class="fs-2 fw-bold" style="color:var(--brass)">{{ site_settings.products_count }}</div>
+                            <div class="text-muted small">Products</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-4 rounded" style="background:#fff8e1; border-bottom:3px solid var(--brass);">
+                            <div class="fs-2 fw-bold" style="color:var(--brass)">{{ site_settings.clients_count }}</div>
+                            <div class="text-muted small">Clients</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-4 rounded" style="background:#fff8e1; border-bottom:3px solid var(--brass);">
+                            <div class="fs-2 fw-bold" style="color:var(--brass)">{{ site_settings.countries_count }}</div>
+                            <div class="text-muted small">Countries</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-4 rounded" style="background:#fff8e1; border-bottom:3px solid var(--brass);">
+                            <div class="fs-2 fw-bold" style="color:var(--brass)">{{ site_settings.experience_years }}</div>
+                            <div class="text-muted small">Years Exp.</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if why_us %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="divider mx-auto mt-2"></div>
+        </div>
+        <div class="row g-4">
+            {% for item in why_us %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card p-4 h-100">
+                    <i class="fas {{ item.icon }} fa-2x mb-3" style="color:var(--brass)"></i>
+                    <h5 class="fw-bold">{{ item.title }}</h5>
+                    <p class="text-muted small mb-0">{{ item.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if team %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Our Team</h2>
+            <div class="divider mx-auto mt-2"></div>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for member in team %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card text-center p-4 h-100">
+                    {% if member.photo %}
+                    <img src="{{ member.photo.url }}" class="rounded-circle mx-auto mb-3" style="width:100px;height:100px;object-fit:cover;" alt="{{ member.name }}">
+                    {% else %}
+                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:var(--brass);color:#fff;font-size:2rem;font-weight:700;">{{ member.name|first }}</div>
+                    {% endif %}
+                    <h5 class="fw-bold mb-1">{{ member.name }}</h5>
+                    <p class="text-muted small mb-2">{{ member.designation }}</p>
+                    {% if member.bio %}<p class="text-muted small">{{ member.bio|truncatechars:100 }}</p>{% endif %}
+                    {% if member.linkedin_url %}<a href="{{ member.linkedin_url }}" target="_blank" class="btn btn-sm" style="background:var(--brass);color:#fff;"><i class="fab fa-linkedin me-1"></i>LinkedIn</a>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if certifications %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Our Certifications</h2>
+            <div class="divider mx-auto mt-2"></div>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for cert in certifications %}
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card p-3 text-center h-100">
+                    <img src="{{ cert.image.url }}" class="img-fluid mb-2" alt="{{ cert.name }}" style="max-height:100px;object-fit:contain;">
+                    <h6 class="fw-bold mb-1">{{ cert.name }}</h6>
+                    {% if cert.year %}<small class="text-muted">Since {{ cert.year }}</small>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -67,6 +67,7 @@
             text-decoration: none;
             transition: all 0.2s;
             font-size: 0.95rem;
+            border-left: 3px solid transparent;
         }
         .sidebar-menu li a:hover, .sidebar-menu li a.active {
             color: var(--sidebar-active);
@@ -76,6 +77,11 @@
         .sidebar-menu li a i {
             width: 25px;
             font-size: 1.1rem;
+            margin-right: 8px;
+        }
+        .sidebar-menu .submenu a {
+            padding-left: 55px;
+            font-size: 0.88rem;
         }
         .sidebar-footer {
             padding: 15px 25px;
@@ -108,8 +114,12 @@
         .card {
             border: none;
             box-shadow: 0 1px 15px rgba(0,0,0,0.04);
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 25px;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         .card-header {
             background-color: transparent;
@@ -121,11 +131,22 @@
             background-color: var(--brand-color);
             color: #fff;
             border: none;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
         .btn-brand:hover {
             background-color: var(--brand-dark);
             color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
         }
+        .table th {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+        }
+        .badge { font-weight: 500; }
         
     </style>
     {% block extra_css %}{% endblock %}
@@ -144,18 +165,21 @@
             </li>
             
             <li class="menu-header px-4 py-2 mt-3 text-uppercase small text-muted font-weight-bold" style="font-size:0.75rem;">Catalog</li>
-            <li><a href="#" class="{% if 'product' in request.resolver_match.url_name %}active{% endif %}">
+            <li><a href="{% url 'dashboard:product_list' %}" class="{% if 'product' in request.resolver_match.url_name and 'inquiry' not in request.resolver_match.url_name %}active{% endif %}">
                 <i class="fas fa-box-open"></i> Products</a>
             </li>
             
             <li class="menu-header px-4 py-2 mt-3 text-uppercase small text-muted font-weight-bold" style="font-size:0.75rem;">Content</li>
-            <li><a href="#" class="{% if 'blog' in request.resolver_match.url_name %}active{% endif %}">
+            <li><a href="{% url 'dashboard:post_list' %}" class="{% if 'post' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="fas fa-newspaper"></i> Blog / News</a>
             </li>
             
             <li class="menu-header px-4 py-2 mt-3 text-uppercase small text-muted font-weight-bold" style="font-size:0.75rem;">Interactions</li>
-            <li><a href="#" class="{% if 'inquiry' in request.resolver_match.url_name %}active{% endif %}">
-                <i class="fas fa-envelope"></i> Inquiries</a>
+            <li><a href="{% url 'dashboard:contact_list' %}" class="{% if 'contact' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-envelope"></i> Contact Queries</a>
+            </li>
+            <li class="submenu"><a href="{% url 'dashboard:product_inquiry_list' %}" class="{% if 'product_inquiry' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-shopping-cart"></i> Product Inquiries</a>
             </li>
         </ul>
         <div class="sidebar-footer">
@@ -179,7 +203,7 @@
                         <span class="fw-medium">{{ request.user.username }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="{% url 'django-admin:index' %}"><i class="fas fa-cogs me-2 text-muted"></i>Django Admin</a></li>
+                        <li><a class="dropdown-item" href="/django-admin/"><i class="fas fa-cogs me-2 text-muted"></i>Django Admin</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="post" action="{% url 'dashboard:logout' %}">

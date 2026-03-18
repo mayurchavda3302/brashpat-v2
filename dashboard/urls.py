@@ -29,9 +29,4 @@ urlpatterns = [
     path('inquiries/contact/<int:pk>/', views.ContactInquiryDetailView.as_view(), name='contact_detail'),
     path('inquiries/product/', views.ProductInquiryListView.as_view(), name='product_inquiry_list'),
     path('inquiries/product/<int:pk>/', views.ProductInquiryDetailView.as_view(), name='product_inquiry_detail'),
-    # Inquiries
-    path('inquiries/contact/', views.ContactInquiryListView.as_view(), name='contact_list'),
-    path('inquiries/contact/<int:pk>/', views.ContactInquiryDetailView.as_view(), name='contact_detail'),
-    path('inquiries/product/', views.ProductInquiryListView.as_view(), name='product_inquiry_list'),
-    path('inquiries/product/<int:pk>/', views.ProductInquiryDetailView.as_view(), name='product_inquiry_detail'),
 ]

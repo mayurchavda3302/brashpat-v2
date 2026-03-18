@@ -8,7 +8,8 @@
     <div class="col-xl-3 col-md-6">
         <div class="card bg-white h-100">
             <div class="card-body d-flex align-items-center">
-                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(184, 134, 11, 0.1); color: #B8860B;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style="width:60px; height:60px; background:rgba(184, 134, 11, 0.1); color: #B8860B;">
                     <i class="fas fa-box-open fa-2x"></i>
                 </div>
                 <div>
@@ -23,7 +24,8 @@
     <div class="col-xl-3 col-md-6">
         <div class="card bg-white h-100">
             <div class="card-body d-flex align-items-center">
-                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(30, 144, 255, 0.1); color: #1e90ff;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style="width:60px; height:60px; background:rgba(30, 144, 255, 0.1); color: #1e90ff;">
                     <i class="fas fa-newspaper fa-2x"></i>
                 </div>
                 <div>
@@ -38,7 +40,8 @@
     <div class="col-xl-3 col-md-6">
         <div class="card bg-white h-100">
             <div class="card-body d-flex align-items-center">
-                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(255, 99, 71, 0.1); color: #ff6347;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style="width:60px; height:60px; background:rgba(255, 99, 71, 0.1); color: #ff6347;">
                     <i class="fas fa-shopping-cart fa-2x"></i>
                 </div>
                 <div>
@@ -53,7 +56,8 @@
     <div class="col-xl-3 col-md-6">
         <div class="card bg-white h-100">
             <div class="card-body d-flex align-items-center">
-                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(46, 204, 113, 0.1); color: #2ecc71;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style="width:60px; height:60px; background:rgba(46, 204, 113, 0.1); color: #2ecc71;">
                     <i class="fas fa-envelope fa-2x"></i>
                 </div>
                 <div>
@@ -71,7 +75,7 @@
         <div class="card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 fw-bold">Recent Product Inquiries</h6>
-                <a href="#" class="btn btn-sm btn-light border">View All</a>
+                <a href="{% url 'dashboard:product_inquiry_list' %}" class="btn btn-sm btn-light border">View All</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -92,14 +96,16 @@
                                 <td class="py-3 text-muted small">{{ inq.created_at|date:"M d, Y" }}</td>
                                 <td class="py-3">
                                     {% if inq.is_read %}
-                                        <span class="badge bg-secondary">Read</span>
+                                    <span class="badge bg-secondary">Read</span>
                                     {% else %}
-                                        <span class="badge bg-danger">New</span>
+                                    <span class="badge bg-danger">New</span>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="4" class="text-center py-4 text-muted">No product inquiries found.</td></tr>
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No product inquiries found.</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -113,7 +119,7 @@
         <div class="card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 fw-bold">Recent Contact Queries</h6>
-                <a href="#" class="btn btn-sm btn-light border">View All</a>
+                <a href="{% url 'dashboard:contact_list' %}" class="btn btn-sm btn-light border">View All</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -134,14 +140,16 @@
                                 <td class="py-3 text-muted small">{{ inq.created_at|date:"M d, Y" }}</td>
                                 <td class="py-3">
                                     {% if inq.is_read %}
-                                        <span class="badge bg-secondary">Read</span>
+                                    <span class="badge bg-secondary">Read</span>
                                     {% else %}
-                                        <span class="badge bg-danger">New</span>
+                                    <span class="badge bg-danger">New</span>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="4" class="text-center py-4 text-muted">No contact queries found.</td></tr>
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No contact queries found.</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

@@ -1,0 +1,65 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}{% if object %}Edit Post: {{ object.title }}{% else %}Add New Post{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 fw-bold">Post Content</h6>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger">Please correct the errors below.</div>
+                    {% endif %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-medium">Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-medium">Excerpt</label>
+                            {{ form.excerpt }}
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-medium">Content</label>
+                            {{ form.content }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Featured Image</label>
+                            {{ form.featured_image }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Author</label>
+                            {{ form.author }}
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-medium">Tags</label>
+                            {{ form.tags }}
+                            <small class="text-muted">Hold down "Control" to select multiple tags.</small>
+                        </div>
+                        <div class="col-md-12 mt-4">
+                            <div class="form-check form-switch">
+                                {{ form.is_published }}
+                                <label class="form-check-label ms-1">Published</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-5">
+                        <a href="{% url 'dashboard:post_list' %}" class="btn btn-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-brand px-4">
+                            {% if object %}Save Changes{% else %}Draft Post{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

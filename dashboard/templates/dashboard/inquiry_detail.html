@@ -1,0 +1,63 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}Inquiry Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold">Message Details</h6>
+                <a href="javascript:history.back()" class="btn btn-sm btn-light border"><i class="fas fa-arrow-left me-1"></i>Back</a>
+            </div>
+            <div class="card-body p-4">
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p class="text-muted small text-uppercase fw-bold mb-1">Sender</p>
+                        <p class="mb-2 fw-medium">{{ inquiry.name }}</p>
+                        
+                        <p class="text-muted small text-uppercase fw-bold mb-1 mt-3">Email</p>
+                        <p class="mb-0"><a href="mailto:{{ inquiry.email }}" class="text-decoration-none">{{ inquiry.email }}</a></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted small text-uppercase fw-bold mb-1">Date Received</p>
+                        <p class="mb-2">{{ inquiry.created_at|date:"F d, Y, h:i A" }}</p>
+                        
+                        <p class="text-muted small text-uppercase fw-bold mb-1 mt-3">Phone</p>
+                        <p class="mb-0">{% if inquiry.phone %}<a href="tel:{{ inquiry.phone }}" class="text-decoration-none">{{ inquiry.phone }}</a>{% else %}-{% endif %}</p>
+                    </div>
+                </div>
+                
+                <hr class="text-muted opacity-25">
+                
+                <div class="mb-4">
+                    {% if inquiry.product %}
+                        <p class="text-muted small text-uppercase fw-bold mb-1 mt-3">Product Interested In</p>
+                        <p class="mb-2"><a href="{% url 'dashboard:product_edit' inquiry.product.pk %}" class="text-decoration-none fw-medium">{{ inquiry.product.name }}</a></p>
+                        
+                        <p class="text-muted small text-uppercase fw-bold mb-1 mt-3">Requested Quantity</p>
+                        <p class="mb-2">{{ inquiry.quantity|default:"-" }}</p>
+                    {% else %}
+                        <p class="text-muted small text-uppercase fw-bold mb-1 mt-3">Company</p>
+                        <p class="mb-2">{{ inquiry.company|default:"-" }}</p>
+                        
+                        <p class="text-muted small text-uppercase fw-bold mb-1 mt-3">Subject</p>
+                        <p class="mb-2 fw-medium">{{ inquiry.subject|default:"-" }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-light p-4 rounded-3 border">
+                    <p class="text-muted small text-uppercase fw-bold mb-2">Message Content</p>
+                    <p class="mb-0" style="white-space: pre-wrap;">{{ inquiry.message }}</p>
+                </div>
+                
+                <div class="mt-4 pt-2 text-end">
+                    <a href="mailto:{{ inquiry.email }}" class="btn btn-brand px-4"><i class="fas fa-reply me-2"></i>Reply via Email</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

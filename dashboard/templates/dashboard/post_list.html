@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}Posts{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-newspaper me-2 text-muted"></i>Blog Posts</span>
+        <a href="{% url 'dashboard:post_add' %}" class="btn btn-sm btn-brand"><i class="fas fa-plus me-1"></i>Add Post</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Image</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Date Published</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <td class="ps-4">
+                            {% if post.featured_image %}
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="height:40px; border-radius:4px;">
+                            {% else %}
+                                <div class="bg-light text-muted d-flex align-items-center justify-content-center" style="width:40px; height:40px; border-radius:4px;"><i class="fas fa-image"></i></div>
+                            {% endif %}
+                        </td>
+                        <td class="fw-medium">{{ post.title }}</td>
+                        <td>{{ post.author.username|default:"Admin" }}</td>
+                        <td>{{ post.published_at|date:"M d, Y"|default:"-" }}</td>
+                        <td>
+                            {% if post.is_published %}
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill">Published</span>
+                            {% else %}
+                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill">Draft</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'dashboard:post_edit' post.pk %}" class="btn btn-sm btn-light border text-primary" title="Edit"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'dashboard:post_delete' post.pk %}" class="btn btn-sm btn-light border text-danger" title="Delete"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center py-4 text-muted">No blog posts found. <a href="{% url 'dashboard:post_add' %}">Write one!</a></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if is_paginated %}
+<nav>
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+        {% endif %}
+
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Products Stat -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-white h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(184, 134, 11, 0.1); color: #B8860B;">
+                    <i class="fas fa-box-open fa-2x"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Total Products</h6>
+                    <h3 class="mb-0 fw-bold">{{ product_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blogs Stat -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-white h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(30, 144, 255, 0.1); color: #1e90ff;">
+                    <i class="fas fa-newspaper fa-2x"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Blog Posts</h6>
+                    <h3 class="mb-0 fw-bold">{{ blog_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Inquiries Stat -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-white h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(255, 99, 71, 0.1); color: #ff6347;">
+                    <i class="fas fa-shopping-cart fa-2x"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Unread Product Inquiries</h6>
+                    <h3 class="mb-0 fw-bold">{{ unread_product_inquiries }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Inquiries Stat -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-white h-100">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px; height:60px; background:rgba(46, 204, 113, 0.1); color: #2ecc71;">
+                    <i class="fas fa-envelope fa-2x"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Unread Contact Queries</h6>
+                    <h3 class="mb-0 fw-bold">{{ unread_contact_inquiries }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Product Inquiries -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold">Recent Product Inquiries</h6>
+                <a href="#" class="btn btn-sm btn-light border">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Product</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inq in recent_product_inquiries %}
+                            <tr>
+                                <td class="py-3">{{ inq.name }}</td>
+                                <td class="py-3">{{ inq.product.name|truncatechars:30 }}</td>
+                                <td class="py-3 text-muted small">{{ inq.created_at|date:"M d, Y" }}</td>
+                                <td class="py-3">
+                                    {% if inq.is_read %}
+                                        <span class="badge bg-secondary">Read</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">New</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center py-4 text-muted">No product inquiries found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Contact Inquiries -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold">Recent Contact Queries</h6>
+                <a href="#" class="btn btn-sm btn-light border">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inq in recent_contacts %}
+                            <tr>
+                                <td class="py-3">{{ inq.name }}</td>
+                                <td class="py-3">{{ inq.subject|truncatechars:30 }}</td>
+                                <td class="py-3 text-muted small">{{ inq.created_at|date:"M d, Y" }}</td>
+                                <td class="py-3">
+                                    {% if inq.is_read %}
+                                        <span class="badge bg-secondary">Read</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">New</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center py-4 text-muted">No contact queries found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

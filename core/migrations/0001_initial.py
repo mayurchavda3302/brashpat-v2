@@ -131,7 +131,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "company_name",
-                    models.CharField(default="Suraj Brass Industries", max_length=200),
+                    models.CharField(default="Kedarnath Industry", max_length=200),
                 ),
                 ("tagline", models.CharField(blank=True, max_length=300)),
                 ("email", models.EmailField(blank=True, max_length=254)),

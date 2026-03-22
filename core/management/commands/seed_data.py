@@ -19,7 +19,7 @@ class Command(BaseCommand):
         settings, _ = SiteSettings.objects.get_or_create(pk=1)
         settings.company_name = "Kedarnath Industry"
         settings.tagline = "Precision Brass Components Manufacturer"
-        settings.email = "info@surajbrassindustries.com"
+        settings.email = "info@kedarnathindustry.com"
         settings.phone_primary = "+91 98765 43210"
         settings.address = "123, Industrial Area, GIDC"
         settings.city = "Jamnagar"

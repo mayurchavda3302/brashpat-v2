@@ -3,7 +3,7 @@ from django.db import models
 
 class SiteSettings(models.Model):
     """Global site settings - only ONE row should exist."""
-    company_name = models.CharField(max_length=200, default="Suraj Brass Industries")
+    company_name = models.CharField(max_length=200, default="Kedarnath Industry")
     tagline = models.CharField(max_length=300, blank=True)
     email = models.EmailField(blank=True)
     phone_primary = models.CharField(max_length=20, blank=True)

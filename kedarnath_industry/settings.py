@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-change-this-in-production-surajbrass2024'
+SECRET_KEY = 'django-insecure-change-this-in-production-kedarnath2024'
 
 DEBUG = True
 
@@ -33,7 +33,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'suraj_brass.urls'
+ROOT_URLCONF = 'kedarnath_industry.urls'
 
 TEMPLATES = [
     {
@@ -53,7 +53,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'suraj_brass.wsgi.application'
+WSGI_APPLICATION = 'kedarnath_industry.wsgi.application'
 
 DATABASES = {
     'default': {

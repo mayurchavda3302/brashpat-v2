@@ -11,6 +11,6 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-admin.site.site_header = "Suraj Brass Industries Admin"
-admin.site.site_title = "Suraj Brass Admin"
-admin.site.index_title = "Welcome to Suraj Brass Industries Admin Panel"
+admin.site.site_header = "Kedarnath Industry Admin"
+admin.site.site_title = "Kedarnath Industry Admin"
+admin.site.index_title = "Welcome to Kedarnath Industry Admin Panel"

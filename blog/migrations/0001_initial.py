@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "author",
-                    models.CharField(default="Suraj Brass Industries", max_length=100),
+                    models.CharField(default="Kedarnath Industry", max_length=100),
                 ),
                 ("is_published", models.BooleanField(default=False)),
                 ("published_at", models.DateTimeField(blank=True, null=True)),

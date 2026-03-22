@@ -23,7 +23,7 @@ class Post(models.Model):
     content = models.TextField()
     featured_image = models.ImageField(upload_to='blog/', blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
-    author = models.CharField(max_length=100, default="Suraj Brass Industries")
+    author = models.CharField(max_length=100, default="Kedarnath Industry")
     is_published = models.BooleanField(default=False)
     published_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

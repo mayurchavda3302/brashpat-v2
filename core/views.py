@@ -4,6 +4,7 @@ from .models import (
     SiteSettings, Banner, WhyChooseUs, TeamMember,
     Testimonial, QualityFeature, Certification, ContactInquiry
 )
+from .forms import ContactInquiryForm
 from products.models import Category, Product
 from blog.models import Post
 
@@ -46,15 +47,13 @@ def quality(request):
 
 def contact(request):
     if request.method == 'POST':
-        inquiry = ContactInquiry(
-            name=request.POST.get('name', ''),
-            email=request.POST.get('email', ''),
-            phone=request.POST.get('phone', ''),
-            company=request.POST.get('company', ''),
-            subject=request.POST.get('subject', ''),
-            message=request.POST.get('message', ''),
-        )
-        inquiry.save()
-        messages.success(request, 'Thank you! Your inquiry has been received. We will contact you shortly.')
-        return redirect('contact')
-    return render(request, 'core/contact.html')
+        form = ContactInquiryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Thank you! Your inquiry has been received. We will contact you shortly.')
+            return redirect('contact')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = ContactInquiryForm()
+    return render(request, 'core/contact.html', {'form': form})

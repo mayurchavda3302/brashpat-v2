@@ -2,15 +2,77 @@
 Run this with: python manage.py seed_data
 Creates initial demo data so you can see the site immediately.
 """
+import os
+import shutil
 from django.core.management.base import BaseCommand
+from django.conf import settings as django_settings
 from core.models import SiteSettings, Banner, WhyChooseUs, QualityFeature
-from products.models import Category, Product
+from products.models import Category, Product, ProductImage
 from blog.models import Post, Tag
 from django.utils import timezone
 
 
+# Map each (category, type_number) to a unique image file
+PRODUCT_IMAGE_MAP = {
+    ("Brass Fittings", 1): "brass_fittings.png",
+    ("Brass Fittings", 2): "brass_fittings_2.png",
+    ("Brass Fittings", 3): "brass_fittings_3.png",
+    ("Brass Inserts", 1): "brass_inserts.png",
+    ("Brass Inserts", 2): "brass_inserts_2.png",
+    ("Brass Inserts", 3): "brass_inserts_3.png",
+    ("Brass Connectors", 1): "brass_connectors.png",
+    ("Brass Connectors", 2): "brass_connectors_2.png",
+    ("Brass Connectors", 3): "brass_connectors_3.png",
+    ("Brass Valves", 1): "brass_valves.png",
+    ("Brass Valves", 2): "brass_valves_2.png",
+    ("Brass Valves", 3): "brass_valves_3.png",
+    ("Brass Fasteners", 1): "brass_fasteners.png",
+    ("Brass Fasteners", 2): "brass_fasteners_2.png",
+    ("Brass Fasteners", 3): "brass_fasteners_3.png",
+    ("Custom Brass Parts", 1): "brass_custom_parts.png",
+    ("Custom Brass Parts", 2): "brass_custom_parts_2.png",
+    ("Custom Brass Parts", 3): "brass_custom_parts.png",  # Reuse Type 1 (rate limit)
+}
+
+
 class Command(BaseCommand):
     help = 'Seed initial demo data'
+
+    def _assign_product_images(self):
+        """Copy unique static product images to media and assign to products."""
+        static_img_dir = os.path.join(django_settings.BASE_DIR, 'static', 'images', 'products')
+        media_products_dir = os.path.join(django_settings.MEDIA_ROOT, 'products')
+        os.makedirs(media_products_dir, exist_ok=True)
+
+        for (category_name, type_num), image_filename in PRODUCT_IMAGE_MAP.items():
+            src_path = os.path.join(static_img_dir, image_filename)
+            if not os.path.exists(src_path):
+                self.stdout.write(self.style.WARNING(f'  Image not found: {src_path}'))
+                continue
+
+            product_name = f"{category_name} - Type {type_num}"
+            try:
+                product = Product.objects.get(name=product_name)
+            except Product.DoesNotExist:
+                continue
+
+            # Delete existing images for this product to reassign
+            product.images.all().delete()
+
+            # Copy image to media directory with unique name
+            dest_filename = f"{product.slug}.png"
+            dest_path = os.path.join(media_products_dir, dest_filename)
+            shutil.copy2(src_path, dest_path)
+
+            # Create ProductImage record
+            ProductImage.objects.create(
+                product=product,
+                image=f"products/{dest_filename}",
+                alt_text=f"{product.name} - High quality brass component",
+                is_primary=True,
+                order=0,
+            )
+            self.stdout.write(f'  Assigned unique image to: {product.name}')
 
     def handle(self, *args, **kwargs):
         self.stdout.write('Seeding data...')
@@ -85,6 +147,11 @@ class Command(BaseCommand):
                         is_featured=(j == 1),
                     )
         self.stdout.write(self.style.SUCCESS('✓ Categories and products created'))
+
+        # Assign unique product images
+        self.stdout.write('Assigning unique product images...')
+        self._assign_product_images()
+        self.stdout.write(self.style.SUCCESS('✓ Product images assigned'))
 
         # Blog
         tag1, _ = Tag.objects.get_or_create(name="Industry News")

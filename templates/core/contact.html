@@ -67,32 +67,57 @@
             <div class="col-lg-8">
                 <div class="card p-4 p-md-5">
                     <h3 class="fw-bold mb-4">Send an Inquiry</h3>
-                    <form method="post" novalidate>
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger py-2 small mb-3">
+                        {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" id="contactForm" novalidate>
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Full Name *</label>
-                                <input type="text" name="name" class="form-control" required placeholder="Your name">
+                                <label for="contact-name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">{{ form.name.errors.0 }}</div>
+                                {% endif %}
+                                <div class="invalid-feedback" id="cname-error"></div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Email Address *</label>
-                                <input type="email" name="email" class="form-control" required placeholder="your@email.com">
+                                <label for="contact-email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                                <div class="invalid-feedback" id="cemail-error"></div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Phone Number</label>
-                                <input type="tel" name="phone" class="form-control" placeholder="+91 XXXXX XXXXX">
+                                <label for="contact-phone" class="form-label fw-semibold">Phone Number</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                <div class="invalid-feedback d-block">{{ form.phone.errors.0 }}</div>
+                                {% endif %}
+                                <div class="invalid-feedback" id="cphone-error"></div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Company Name</label>
-                                <input type="text" name="company" class="form-control" placeholder="Your company">
+                                <label for="contact-company" class="form-label fw-semibold">Company Name</label>
+                                {{ form.company }}
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Subject</label>
-                                <input type="text" name="subject" class="form-control" placeholder="e.g. Brass Fittings Inquiry">
+                                <label for="contact-subject" class="form-label fw-semibold">Subject</label>
+                                {{ form.subject }}
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Message *</label>
-                                <textarea name="message" class="form-control" rows="5" required placeholder="Describe your requirement in detail..."></textarea>
+                                <label for="contact-message" class="form-label fw-semibold">Message <span class="text-danger">*</span></label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                <div class="invalid-feedback d-block">{{ form.message.errors.0 }}</div>
+                                {% endif %}
+                                <div class="invalid-feedback" id="cmessage-error"></div>
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-brass btn-lg px-5">
@@ -114,4 +139,91 @@
     </div>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        clearErrors();
+
+        // Name validation
+        const name = document.getElementById('contact-name');
+        if (!name.value.trim() || name.value.trim().length < 2) {
+            showError(name, 'cname-error', 'Name must be at least 2 characters.');
+            isValid = false;
+        } else if (!/^[a-zA-Z\s.'\-]+$/.test(name.value.trim())) {
+            showError(name, 'cname-error', 'Name can only contain letters, spaces, dots, hyphens.');
+            isValid = false;
+        }
+
+        // Email validation
+        const email = document.getElementById('contact-email');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email.value.trim()) {
+            showError(email, 'cemail-error', 'Email is required.');
+            isValid = false;
+        } else if (!emailRegex.test(email.value.trim())) {
+            showError(email, 'cemail-error', 'Please enter a valid email address.');
+            isValid = false;
+        }
+
+        // Phone validation (optional)
+        const phone = document.getElementById('contact-phone');
+        if (phone.value.trim()) {
+            const cleaned = phone.value.replace(/[\s\-\(\)]+/g, '');
+            if (!/^\+?\d{7,15}$/.test(cleaned)) {
+                showError(phone, 'cphone-error', 'Please enter a valid phone number (7-15 digits).');
+                isValid = false;
+            }
+        }
+
+        // Message validation (required)
+        const message = document.getElementById('contact-message');
+        if (!message.value.trim()) {
+            showError(message, 'cmessage-error', 'Message is required.');
+            isValid = false;
+        } else if (message.value.trim().length < 10) {
+            showError(message, 'cmessage-error', 'Message must be at least 10 characters.');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+
+    function showError(input, errorId, msg) {
+        input.classList.add('is-invalid');
+        const errorDiv = document.getElementById(errorId);
+        if (errorDiv) {
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+        }
+    }
+
+    function clearErrors() {
+        form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        form.querySelectorAll('.invalid-feedback').forEach(el => {
+            if (!el.classList.contains('d-block')) el.style.display = 'none';
+        });
+    }
+
+    // Real-time validation feedback
+    ['contact-name', 'contact-email', 'contact-phone', 'contact-message'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+                const errorDiv = this.parentElement.querySelector('.invalid-feedback:not(.d-block)');
+                if (errorDiv) errorDiv.style.display = 'none';
+            });
+        }
+    });
+});
+</script>
 {% endblock %}

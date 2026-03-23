@@ -24,13 +24,15 @@
             <div class="col-lg-4 col-md-6">
                 <a href="{% url 'category_detail' cat.slug %}" class="text-decoration-none">
                     <div class="card h-100 overflow-hidden">
-                        {% if cat.image %}
-                        <img src="{{ cat.image.url }}" class="card-img-top" alt="{{ cat.name }}" style="height:220px;object-fit:cover;">
+                        {% with cat.get_representative_image as cat_img %}
+                        {% if cat_img %}
+                        <img src="{{ cat_img }}" class="card-img-top" alt="{{ cat.name }}" style="height:220px;object-fit:cover;">
                         {% else %}
                         <div style="height:220px;background:linear-gradient(135deg,#f5e6c8,#e8d5a3);display:flex;align-items:center;justify-content:center;">
                             <i class="fas fa-cog fa-5x" style="color:var(--brass);opacity:.35;"></i>
                         </div>
                         {% endif %}
+                        {% endwith %}
                         <div class="card-body">
                             <h5 class="fw-bold" style="color:var(--dark)">{{ cat.name }}</h5>
                             {% if cat.description %}<p class="text-muted small">{{ cat.description|truncatechars:120 }}</p>{% endif %}

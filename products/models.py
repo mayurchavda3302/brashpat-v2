@@ -37,6 +37,17 @@ class Category(models.Model):
             self.slug = slug
         super().save(*args, **kwargs)
 
+    def get_representative_image(self):
+        """Return category image or fall back to first product's primary image."""
+        if self.image:
+            return self.image.url
+        # Try to get first product's primary image
+        for product in self.products.all()[:1]:
+            img = product.get_primary_image()
+            if img:
+                return img.image.url
+        return None
+
     def get_products(self):
         """Return max 5 products for this category."""
         return self.products.filter(is_active=True)[:5]
@@ -107,6 +118,13 @@ class ProductImage(models.Model):
         super().save(*args, **kwargs)
 
 
+INQUIRY_STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('accepted', 'Accepted'),
+    ('rejected', 'Rejected'),
+]
+
+
 class ProductInquiry(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='inquiries')
     name = models.CharField(max_length=100)
@@ -116,6 +134,7 @@ class ProductInquiry(models.Model):
     message = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=INQUIRY_STATUS_CHOICES, default='pending')
 
     class Meta:
         ordering = ['-created_at']

@@ -113,13 +113,15 @@
             <div class="col-lg-4 col-md-6">
                 <a href="{% url 'category_detail' cat.slug %}" class="text-decoration-none">
                     <div class="card overflow-hidden h-100">
-                        {% if cat.image %}
-                        <img src="{{ cat.image.url }}" class="card-img-top" alt="{{ cat.name }}" style="height:200px;object-fit:cover;">
+                        {% with cat.get_representative_image as cat_img %}
+                        {% if cat_img %}
+                        <img src="{{ cat_img }}" class="card-img-top" alt="{{ cat.name }}" style="height:200px;object-fit:cover;">
                         {% else %}
                         <div style="height:200px;background:linear-gradient(135deg,#f5e6c8,#e8d5a3);display:flex;align-items:center;justify-content:center;">
                             <i class="fas fa-cog fa-4x" style="color:var(--brass);opacity:.4;"></i>
                         </div>
                         {% endif %}
+                        {% endwith %}
                         <div class="card-body">
                             <h5 class="card-title fw-bold" style="color:var(--dark)">{{ cat.name }}</h5>
                             {% if cat.description %}<p class="card-text small text-muted">{{ cat.description|truncatechars:100 }}</p>{% endif %}

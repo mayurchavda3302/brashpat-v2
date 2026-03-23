@@ -144,6 +144,13 @@ class Certification(models.Model):
         return self.name
 
 
+INQUIRY_STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('accepted', 'Accepted'),
+    ('rejected', 'Rejected'),
+]
+
+
 class ContactInquiry(models.Model):
     """Stores contact form submissions."""
     name = models.CharField(max_length=100)
@@ -154,6 +161,7 @@ class ContactInquiry(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=INQUIRY_STATUS_CHOICES, default='pending')
 
     class Meta:
         ordering = ['-created_at']

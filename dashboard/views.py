@@ -187,3 +187,30 @@ class ProductInquiryDetailView(AdminRequiredMixin, DetailView):
             self.object.save()
         return response
 
+
+# --- INQUIRY STATUS ACTIONS ---
+
+from django.shortcuts import get_object_or_404
+from django.views import View
+
+
+class ContactInquiryStatusView(AdminRequiredMixin, View):
+    """Accept or reject a contact inquiry."""
+    def post(self, request, pk, action):
+        inquiry = get_object_or_404(ContactInquiry, pk=pk)
+        if action in ('accepted', 'rejected'):
+            inquiry.status = action
+            inquiry.save()
+            messages.success(request, f'Inquiry marked as {action}.')
+        return redirect('dashboard:contact_detail', pk=pk)
+
+
+class ProductInquiryStatusView(AdminRequiredMixin, View):
+    """Accept or reject a product inquiry."""
+    def post(self, request, pk, action):
+        inquiry = get_object_or_404(ProductInquiry, pk=pk)
+        if action in ('accepted', 'rejected'):
+            inquiry.status = action
+            inquiry.save()
+            messages.success(request, f'Inquiry marked as {action}.')
+        return redirect('dashboard:product_inquiry_detail', pk=pk)

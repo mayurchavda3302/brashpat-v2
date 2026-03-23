@@ -9,7 +9,6 @@ __pycache__/
 *.pot
 *.pyc
 *.pyo
-*.sqlite3
 
 # Ignore IDE/editor files
 .vscode/

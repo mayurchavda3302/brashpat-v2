@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Quality - {% if site_settings %}{{ site_settings.company_name }}{% endif %}{% endblock %}
 {% block content %}
 <div class="page-header">
@@ -13,7 +14,26 @@
 
 <section class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-lg-6">
+                <h2 class="section-title mb-3">Commitment to Excellence</h2>
+                <div class="divider mb-4" style="margin:0 0 20px 0;"></div>
+                <p class="text-muted">At Kedarnath Industry, quality is not just a standard—it is an intrinsic part of our manufacturing process. From raw material inspection to the final dispatch, every brass component undergoes rigorous testing to ensure it meets international standards. Our state-of-the-art testing facility is equipped with the latest measurement and inspection tools, allowing us to deliver zero-defect products to our global clients.</p>
+                <p class="text-muted">We source only premium grade brass and adhere strictly to tolerance specifications, ensuring that our fittings, fasteners, valves, and custom parts perform flawlessly even in the most demanding environments.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <img src="{% static 'images/products/brass_fittings.png' %}" class="img-fluid rounded shadow-sm" alt="Quality Brass Fittings">
+                    </div>
+                    <div class="col-6 mt-4">
+                        <img src="{% static 'images/products/brass_valves.png' %}" class="img-fluid rounded shadow-sm" alt="Quality Brass Valves">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-5 mt-5">
             <h2 class="section-title">Our Quality Standards</h2>
             <div class="divider mx-auto mt-2 mb-3"></div>
             <p class="section-subtitle text-muted mx-auto">We maintain the highest quality standards in every step of our manufacturing process.</p>
